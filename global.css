@@ -20,8 +20,3 @@ html, body {
   padding: 0;
   margin: 0;
 }
-
-fast-design-system-provider {
-  color: var(--font-color);
-  --background-color: var(--pwa-background-color);
-}

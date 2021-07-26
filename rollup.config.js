@@ -13,8 +13,7 @@ const config = {
     copy({
       targets: [
         { src: 'assets/', dest: 'dist/' },
-        { src: 'global.css', dest: 'dist/' },
-        { src: 'fast-components.min.js', dest: 'dist/' }
+        { src: 'global.css', dest: 'dist/' }
       ]
     }),
     resolve(),

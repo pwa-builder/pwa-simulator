@@ -1,11 +1,10 @@
 # PWABuilder: Interactive manifest previewer
-A [web component](https://medium.com/pwabuilder/building-pwas-with-web-components-33f986bf8e4c) that allows you to preview your PWA on the platform of your choice, based on your app's `manifest.json` file!
+A [web component](https://medium.com/pwabuilder/building-pwas-with-web-components-33f986bf8e4c) that allows you to preview your PWA on Windows 11, based on your app's `manifest.json` file!
 
 ## Built with
 - [Lit](https://lit.dev/)
 - [Typescript](https://www.typescriptlang.org/)
 - The project generator from [Open Web Components](https://open-wc.org/docs/development/generator/)
-- [FAST components](https://www.fast.design/docs/introduction)
 
 ## Using this component
 This component accepts the following configuration. All properties are optional and have default values, but for the optimal experience these should be modified as needed.
