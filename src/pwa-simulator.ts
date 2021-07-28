@@ -1,6 +1,5 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
 
 import './app-window.js';
 import './start-menu.js';
@@ -16,9 +15,14 @@ import {
   CodeEditorUpdateEvent 
 } from './models';
 
-@customElement('manifest-previewer')
-export class ManifestPreviewer extends LitElement {
+@customElement('pwa-simulator')
+export class PWASimulator extends LitElement {
   static styles = css`
+    :host {
+      font-family: var(--font-family, Arial);
+      color: var(--font-color, #292C3A);
+    }
+
     .background {
       position: relative;
       width: 100vw;
@@ -32,7 +36,7 @@ export class ManifestPreviewer extends LitElement {
       bottom: 0;
       left: 0;
       right: 0;
-      background: var(--page-background);
+      background: var(--page-background, linear-gradient(252.83deg, #5039A8 2.36%, #6AA2DB 99.69%));
       opacity: 0.3;
     }
 
@@ -143,11 +147,6 @@ export class ManifestPreviewer extends LitElement {
    * The website's URL
    */
   @property() siteUrl = '';
-
-  /**
-   * The background of the entire page.
-   */
-  @property() pageBackground = '';
 
   /**
    * If true, the code editor is hidden.
@@ -354,7 +353,7 @@ export class ManifestPreviewer extends LitElement {
 
   render() {
     return html`
-      <div class="background" style=${styleMap({ '--page-background': this.pageBackground })}>
+      <div class="background">
         <div class="content">
           <div class="desktop-container">
             <img @click=${this.handleBackdropClick} class="desktop" alt="Windows desktop" src="../assets/images/desktop.png" />
@@ -420,6 +419,6 @@ export class ManifestPreviewer extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'manifest-previewer': ManifestPreviewer;
+    'pwa-simulator': PWASimulator;
   }
 }

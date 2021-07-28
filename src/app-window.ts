@@ -18,7 +18,7 @@ export class AppWindow extends LitElement {
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: var(--pwa-background-color);
+      background-color: var(--pwa-background-color, #FFF);
       transform: scale(0);
       opacity: 0;
       transition: 200ms all ease-in-out;
@@ -58,7 +58,7 @@ export class AppWindow extends LitElement {
     .app-info p {
       margin: 0;
       font-size: 20px;
-      font-weight: var(--font-bold);
+      font-weight: 600;
     }
 
     .app-info img {
@@ -101,7 +101,7 @@ export class AppWindow extends LitElement {
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      background-color: var(--pwa-background-color);
+      background-color: var(--pwa-background-color, #FFF);
     }
 
     .display-background.fullscreen {
@@ -139,7 +139,7 @@ export class AppWindow extends LitElement {
       box-sizing: border-box;
       position: absolute; 
       top: 0;
-      background-color: var(--pwa-theme-color);
+      background-color: var(--pwa-theme-color, #E3CEF6);
     }
 
     .title-bar .name {
@@ -247,7 +247,7 @@ export class AppWindow extends LitElement {
         return html`
           <div 
           class="title-bar"
-          style=${styleMap({ '--pwa-background-color': this.themeColor })}>
+          style=${styleMap({ '--pwa-theme-color': this.themeColor })}>
             <div class="nav-actions">
               <img alt="Go back" src="../assets/images/back-arrow.svg" />
               <img alt="Refresh page" src="../assets/images/refresh-arrow.svg" />
@@ -267,7 +267,7 @@ export class AppWindow extends LitElement {
         return html`
           <div 
           class="title-bar"
-          style=${styleMap({ '--pwa-background-color': this.themeColor })}>
+          style=${styleMap({ '--pwa-theme-color': this.themeColor })}>
             <span class="name">${this.appName}</span>
             <div class="nav-actions">
               <div class="collapse" style=${styleMap({ backgroundColor: this.contrastingThemeColor })}></div>

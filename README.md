@@ -34,8 +34,6 @@ Note that in the HTML markup, property names should be all in lowercase. For mor
     ]
   }
   ```
-- `pageBackground`: The CSS background of the entire page. 
-  - Default: `linear-gradient(252.83deg, #5039A8 2.36%, #6AA2DB 99.69%)`
 - `hideEditor`: If true, the code editor is hidden and only the preview window is displayed.
   - Default: `false`
 - `explanations`: Object containing the explanation messages that are displayed when the user interacts with the previewer. `initial` is the starting message (can be used to suggest an initial action to the user). `appWindow`, `startMenu`, `jumpList` and `store` are all shown when the respective window is open. If a value isn't specified, the default message is used.
@@ -53,3 +51,14 @@ Note that in the HTML markup, property names should be all in lowercase. For mor
   - Default: 5000 (5 seconds)
 - `invalidJsonMessage`: The message displayed to the user when the code editor signals a JSON syntax error. An empty string will completely disable the error alert.
   - Default: "Invalid JSON!"
+
+## Styling
+This component can also be styled according to the needs of your application. 
+The following [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) can be provided:
+Variable name | Description | Default
+--------------|-------------|--------
+`--font-family` | The component's main font family. | Arial
+`--font-color` | The component's main font color. | `#292C3A`
+`--page-background` | The CSS background of the entire page. | `linear-gradient(252.83deg, #5039A8 2.36%, #6AA2DB 99.69%)`
+`--pwa-background-color` | Fallback background color to use in case it is not defined in the manifest. | `#FFF`
+`--pwa-theme-color` | Fallback theme color to use in case it is not defined in the manifest. | `#E3CEF6`
