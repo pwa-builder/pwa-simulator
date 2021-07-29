@@ -1,25 +1,36 @@
-import resolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
-import copy from 'rollup-plugin-copy';
-import html from "@open-wc/rollup-plugin-html";
+import resolve from "@rollup/plugin-node-resolve";
+import { terser } from "rollup-plugin-terser";
+import replace from "@rollup/plugin-replace";
+import strip from "@rollup/plugin-strip";
+import copy from "rollup-plugin-copy";
+import litcss from "rollup-plugin-lit-css";
 
-const config = {
-  input: './index.html',
+export default {
+  input: ["build/pwa-simulator.js"],
   output: {
-    dir: 'dist',
-    format: 'es',
+    file: "dist/pwa-simulator.js",
+    format: "es",
+    sourcemap: false
   },
   plugins: [
+    resolve(),
+    replace({
+      "process.env.NODE_ENV": JSON.stringify(
+        process.env.NODE_ENV || "production"
+      ),
+      '../assets': 'https://github.com/pwa-builder/pwa-simulator/raw/main/assets',
+      delimiters: ['', '']
+    }),
+    litcss(),
+    terser(),
+    strip({
+      functions: ["console.log"],
+    }),
     copy({
       targets: [
-        { src: 'assets/', dest: 'dist/' },
-        { src: 'global.css', dest: 'dist/' }
+        { src: 'build/*.d.ts', dest: 'dist/' },
+        { src: 'build/*.d.ts.map', dest: 'dist/' }
       ]
-    }),
-    resolve(),
-    terser(),
-    html()
+    })
   ]
 };
-
-export default config;

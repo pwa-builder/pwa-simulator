@@ -71,12 +71,15 @@ export class JumpList extends LitElement {
    */
   @property({ type: Array }) shortcuts?: Shortcut[];
 
-  @property() manifestUrl = '';
+  /**
+   * The PWA's URL.
+   */
+  @property() siteUrl = '';
 
   private getShortcutIcon = (icons: ImageResource[]) => {
     // Use first icon by default
     const iconUrl = icons[0].src;
-    const absoluteUrl = new URL(iconUrl, this.manifestUrl).href;
+    const absoluteUrl = new URL(iconUrl, this.siteUrl).href;
     return `https://pwabuilder-safe-url.azurewebsites.net/api/getsafeurl?url=${absoluteUrl}`;
   }
 

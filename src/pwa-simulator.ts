@@ -116,6 +116,47 @@ export class PWASimulator extends LitElement {
       height: 18px;
     }
 
+    .site-input {
+      font-family: var(--font-family, Arial);
+      position: absolute;
+      top: 300px;
+      left: calc(50% - 190px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .site-input input {
+      border: 3px solid var(--font-color, #292C3A);
+      border-radius: 20px;
+      width: 100%;
+      height: 35px;
+      text-align: center;
+      padding: 5px;
+      box-sizing: border-box;
+      font-size: 1rem;
+    }
+
+    .site-input input:focus-visible {
+      outline: none
+    }
+
+    .site-input button {
+      border: none;
+      border-radius: 20px;
+      width: 100px;
+      height: 35px;
+      text-align: center;
+      padding: 5px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      margin-top: 1rem;
+      color: #FFF;
+      background-color: var(--font-color, #292C3A);
+      cursor: pointer;
+      font-family: var(--font-family, Arial);
+    }
+
     @media(max-width: 1100px) {
       .desktop-container { 
         display: none; 
@@ -124,7 +165,7 @@ export class PWASimulator extends LitElement {
   `;
 
   /**
-   * The input web manifest.
+   * The site's web manifest.
    */
   @property({ 
     type: Object,
@@ -136,12 +177,7 @@ export class PWASimulator extends LitElement {
       return JSON.parse(value);
     }
   }) 
-  manifest: Manifest = MANIFEST_TEMPLATE;
-
-  /**
-   * The url where the manifest resides.
-   */
-  @property() manifestUrl = 'https://www.pwabuilder.com/manifest.json';
+  manifest?: Manifest;
 
   /**
    * The website's URL
@@ -158,8 +194,6 @@ export class PWASimulator extends LitElement {
    * which it fades out.
    */
   @property({ type: Number }) explanationDisplayTime = 5000;
-
-  @property() invalidJsonMessage = 'Invalid JSON!';
 
   /**
    * Object containing the explanation messages
@@ -203,14 +237,14 @@ export class PWASimulator extends LitElement {
   @state() private isJumplistOpen = false;
 
   /**
-   * If true, the MSFT store window is 
+   * If true, the MSFT store window is open.
    */
   @state() private isStoreOpen = false;
 
   /**
-   * If true, the manifest's JSON has a syntax error.
+   * Used for displaying API/syntax errors.
    */
-  @state() private invalidJSON = false;
+  @state() private errorMessage = '';
 
   constructor() {
     super();
@@ -229,31 +263,21 @@ export class PWASimulator extends LitElement {
           text = doc.text;
         }
         this.manifest = JSON.parse(text.join(''));
-        this.invalidJSON = false;
+        this.errorMessage = '';
       } catch (err) {
         // Ignore the syntax error but show error message
-        this.invalidJSON = true;
+        this.errorMessage = 'Invalid JSON!';
       }
     });
   }
 
   firstUpdated() {
-    // Set the site URL if not defined (assuming it can be derived from the manifest's URL)
+    // Show the URL input
     if (!this.siteUrl) {
-      this.siteUrl = this.manifestUrl.substring(0, this.manifestUrl.lastIndexOf('manifest.json'));
-    }
-
-    if (this.manifest.icons) {
-      // Try to get the largest icon, or the first one by default
-      let iconUrl = this.manifest.icons[0].src;
-      for (const icon of this.manifest.icons) {
-        if (icon.sizes?.includes('512x512')) {
-          iconUrl = icon.src;
-          break;
-        }
-      }
-      const absoluteUrl = new URL(iconUrl, this.manifestUrl).href;
-      this.iconUrl = `https://pwabuilder-safe-url.azurewebsites.net/api/getsafeurl?url=${absoluteUrl}`;
+      this.hideEditor = true;
+    } else {
+      // Use the default template
+      this.manifest = MANIFEST_TEMPLATE;
     }
 
     // Set default values for the explanation messages
@@ -264,7 +288,30 @@ export class PWASimulator extends LitElement {
       jumpList: this.explanations.jumpList || 'The actions listed on the shortcuts attribute define a context menu that is displayed when right-clicking on the taskbar icon.',
       store: this.explanations.store || "Screenshots, a complete description and categories will enhance your app's listing in the Microsoft Store."
     }
-    this.handleNewExplanation(this.explanations.initial);
+  }
+
+  // Sets the icon URL and triggers the first message when the manifest is defined
+  updated(changedProperties: Map<string, any>) {
+    if (
+      changedProperties.has('manifest') && 
+      changedProperties.get('manifest') === undefined &&
+      this.manifest
+    ) {
+      if (this.manifest.icons) {
+        // Try to get the largest icon, or the first one by default
+        let iconUrl = this.manifest.icons[0].src;
+        for (const icon of this.manifest.icons) {
+          if (icon.sizes?.includes('512x512')) {
+            iconUrl = icon.src;
+            break;
+          }
+        }
+        const absoluteUrl = new URL(iconUrl, this.siteUrl).href;
+        this.iconUrl = `https://pwabuilder-safe-url.azurewebsites.net/api/getsafeurl?url=${absoluteUrl}`;
+      }
+
+      this.handleNewExplanation(this.explanations.initial);
+    }
   }
 
   /**
@@ -283,6 +330,25 @@ export class PWASimulator extends LitElement {
 
   private handleContextMenuDisable = (event: Event) => { 
     event.preventDefault();
+  }
+
+  private handleSiteInputChange = (e: Event) => {
+    this.siteUrl = (e.target as HTMLInputElement).value;
+  }
+
+  private handleSearchManifest = async (e: Event) => {
+    e.preventDefault();
+    
+    // From the input site URL, find the manifest
+    const data = await fetch(
+      `https://pwabuilder-manifest-finder.azurewebsites.net/api/FindManifest?url=${this.siteUrl}
+    `).then(res => res.json());
+
+    if (data.error || data.manifestContainsInvalidJson) {
+      this.errorMessage = "We couldn't fetch your manifest...";
+    } else {
+      this.manifest = data.manifestContents;
+    }
   }
 
   // For adding a smooth transition between explanations.
@@ -352,68 +418,95 @@ export class PWASimulator extends LitElement {
   }
 
   render() {
-    return html`
-      <div class="background">
-        <div class="content">
-          <div class="desktop-container">
-            <img @click=${this.handleBackdropClick} class="desktop" alt="Windows desktop" src="../assets/images/desktop.png" />
-            <div @click=${this.openStore} class="taskbar-icon store-icon"></div>
-            ${this.iconUrl ? 
-              html`
-                <div class="taskbar-icon taskbar-app-icon" @mousedown=${this.handleTaskbarClick} @click=${this.handleTaskbarClick}>
-                  <img alt="App icon" src=${this.iconUrl} />
-                </div>` : 
-              null}
-            <div class="menu-toggler" @click=${this.isMenuOpen ? this.closeStartMenu : this.openStartMenu}></div>
-            <start-menu
-            .isMenuOpen=${this.isMenuOpen}
-            .appName=${this.manifest.name}
-            .iconUrl=${this.iconUrl}
-            .onClose=${this.closeStartMenu}
-            .onOpenApp=${this.openAppWindow}>
-            </start-menu>
-            <app-window 
-            .isWindowOpen=${this.isAppOpen}
-            .onClose=${this.closeAppWindow}
-            .backgroundColor=${this.manifest.background_color}
-            .themeColor=${this.manifest.theme_color}
-            .appName=${this.manifest.name}
-            .iconUrl=${this.iconUrl}
-            .siteUrl=${this.siteUrl}
-            .display=${this.manifest.display || 'standalone'}>
-            </app-window>
-            <jump-list
-            .isListOpen=${this.isJumplistOpen}
-            .shortcuts=${this.manifest.shortcuts}
-            .manifestUrl=${this.manifestUrl}>
-            </jump-list>
-            <store-window
-            .isWindowOpen=${this.isStoreOpen}
-            .onClose=${this.closeStore}
-            .iconUrl=${this.iconUrl}
-            .manifestUrl=${this.manifestUrl}
-            .appName=${this.manifest.name || this.manifest.short_name}
-            .description=${this.manifest.description || 'An amazing progressive web app!'}
-            .screenshots=${this.manifest.screenshots}
-            .categories=${this.manifest.categories}>
-            </store-window>
+    if (this.manifest) {
+      return html`
+        <div class="background">
+          <div class="content">
+            <div class="desktop-container">
+              <img 
+              @click=${this.handleBackdropClick} 
+              class="desktop" 
+              alt="Windows desktop" 
+              src="../assets/images/desktop.png" />
+              <div @click=${this.openStore} class="taskbar-icon store-icon"></div>
+              ${this.iconUrl ? 
+                html`
+                  <div 
+                  class="taskbar-icon taskbar-app-icon" 
+                  @mousedown=${this.handleTaskbarClick} 
+                  @click=${this.handleTaskbarClick}>
+                    <img alt="App icon" src=${this.iconUrl} />
+                  </div>` : null}
+              <div 
+              class="menu-toggler" 
+              @click=${this.isMenuOpen ? this.closeStartMenu : this.openStartMenu}>
+              </div>
+              <start-menu
+              .isMenuOpen=${this.isMenuOpen}
+              .appName=${this.manifest.name}
+              .iconUrl=${this.iconUrl}
+              .onClose=${this.closeStartMenu}
+              .onOpenApp=${this.openAppWindow}>
+              </start-menu>
+              <app-window 
+              .isWindowOpen=${this.isAppOpen}
+              .onClose=${this.closeAppWindow}
+              .backgroundColor=${this.manifest.background_color}
+              .themeColor=${this.manifest.theme_color}
+              .appName=${this.manifest.name}
+              .iconUrl=${this.iconUrl}
+              .siteUrl=${this.siteUrl}
+              .display=${this.manifest.display || 'standalone'}>
+              </app-window>
+              <jump-list
+              .isListOpen=${this.isJumplistOpen}
+              .shortcuts=${this.manifest.shortcuts}
+              .siteUrl=${this.siteUrl}>
+              </jump-list>
+              <store-window
+              .isWindowOpen=${this.isStoreOpen}
+              .onClose=${this.closeStore}
+              .iconUrl=${this.iconUrl}
+              .siteUrl=${this.siteUrl}
+              .appName=${this.manifest.name || this.manifest.short_name}
+              .description=${this.manifest.description || 'An amazing progressive web app!'}
+              .screenshots=${this.manifest.screenshots}
+              .categories=${this.manifest.categories}>
+              </store-window>
+            </div>
+            <div>
+              ${this.hideEditor ? null :
+                html`
+                  <code-editor 
+                  .startText=${JSON.stringify(this.manifest, null, '  ')}>
+                  </code-editor>
+                  <p class="invalid-message">${this.errorMessage}</p>`}
+            </div>
           </div>
-          <div>
-            ${this.hideEditor ? null :
-              html`
-                <code-editor 
-                .startText=${JSON.stringify(this.manifest, null, '  ')}>
-                </code-editor>
-                <p class="invalid-message">${this.invalidJSON ? this.invalidJsonMessage : ''}</p>`}
-          </div>
+          <explanation-text 
+          .message=${this.explanationMessage}
+          .isFadingIn=${this.isExplanationFadingIn}
+          .isFadingOut=${this.isExplanationFadingOut}>
+          </explanation-text>
         </div>
-        <explanation-text 
-        .message=${this.explanationMessage}
-        .isFadingIn=${this.isExplanationFadingIn}
-        .isFadingOut=${this.isExplanationFadingOut}>
-        </explanation-text>
-      </div>
-    `;
+      `;
+    } else {
+      return html`
+        <div class="background">
+          <form class="site-input" @submit=${this.handleSearchManifest}>
+            <h1>Enter the URL to your PWA</h1>
+            <input 
+            type="text" 
+            value=${this.siteUrl} 
+            @change=${this.handleSiteInputChange} />
+            <button type="submit">Start</button>
+            <p class="invalid-message">
+              ${this.errorMessage}
+            </p>
+          </form>
+        </div>
+      `;
+    }
   }
 }
 

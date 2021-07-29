@@ -1,8 +1,9 @@
 {
   "scripts": {
-    "build": "rimraf dist && rimraf out-tsc && tsc && rollup -c rollup.config.js",
-    "start:build": "npm run build && web-dev-server --root-dir dist --app-index index.html --open --compatibility none",
-    "start": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wds\""
+    "start": "tsc && concurrently -k -r \"tsc --watch --preserveWatchOutput\" \"wds\"",
+    "dev:build": "concurrently \"tsc --watch --preserveWatchOutput\" \"rollup -c rollup.config.dev.js\"",
+    "build": "rimraf dist && tsc && rollup -c rollup.config.js",
+    "start:build": "rimraf build && rimraf dist && tsc && concurrently \"npm run dev:build\" \"web-dev-server --root-dir build --app-index build/index.html --open --compatibility none\""
   },
   "devDependencies": {
     "@open-wc/building-rollup": "^1.10.0",
@@ -17,10 +18,29 @@
     "tslib": "^2.2.0",
     "typescript": "^4.3.2"
   },
-  "name": "pwa-simulator",
+  "name": "@pwabuilder/pwa-simulator",
+  "description": "Web component that simulates your PWA's experience on any platform",
   "version": "0.0.0",
   "author": "Maria J. Solano",
   "license": "MIT",
+  "type": "module",
+  "main": "dist/pwa-simulator.js",
+  "module": "dist/pwa-simulator.js",
+  "types": "dist/pwa-simulator.d.ts",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "PWA",
+    "web component",
+    "manifest",
+    "progressive web app",
+    "lit"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pwa-builder/pwa-simulator"
+  },
   "dependencies": {
     "@codemirror/autocomplete": "^0.18.7",
     "@codemirror/closebrackets": "^0.18.0",

@@ -49,8 +49,6 @@ Note that in the HTML markup, property names should be all in lowercase. For mor
   ```
 - `explanationDisplayTime`: The duration (in milliseconds) of the explanation message display, after which it fades out.
   - Default: 5000 (5 seconds)
-- `invalidJsonMessage`: The message displayed to the user when the code editor signals a JSON syntax error. An empty string will completely disable the error alert.
-  - Default: "Invalid JSON!"
 
 ## Styling
 This component can also be styled according to the needs of your application. 

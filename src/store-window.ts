@@ -154,9 +154,9 @@ export class StoreWindow extends LitElement {
   @property() description?: string;
 
   /**
-   * The URL where the manifest resides.
+   * The site's URL.
    */
-  @property() manifestUrl = '';
+  @property() siteUrl = '';
 
   /**
    * The screenshots attribute on the manifest.
@@ -174,7 +174,7 @@ export class StoreWindow extends LitElement {
    */
   private getImageUrl(src: string) {
     // Use first icon by default
-    const absoluteUrl = new URL(src, this.manifestUrl).href;
+    const absoluteUrl = new URL(src, this.siteUrl).href;
     return `https://pwabuilder-safe-url.azurewebsites.net/api/getsafeurl?url=${absoluteUrl}`;
   }
 
