@@ -1,5 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, state, property } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
 import './app-window.js';
 import './start-menu.js';
@@ -27,6 +28,7 @@ export class PWASimulator extends LitElement {
       position: relative;
       width: 100vw;
       height: 100vh;
+      overflow: hidden;
     }
 
     .background::before {
@@ -58,10 +60,7 @@ export class PWASimulator extends LitElement {
     img.desktop {
       width: 100%;
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      inset: 0;
     }
 
     .taskbar-icon {
@@ -421,7 +420,12 @@ export class PWASimulator extends LitElement {
     if (this.manifest) {
       return html`
         <div class="background">
-          <div class="content">
+          <div 
+          class="content"
+          style=${styleMap({
+            transform: this.hideEditor ? 'scale(1.3)' : 'none',
+            marginBottom: this.hideEditor ? '100px' : '0px'
+          })}>
             <div class="desktop-container">
               <img 
               @click=${this.handleBackdropClick} 
