@@ -34,11 +34,8 @@ export class PWASimulator extends LitElement {
     .background::before {
       content: ' ';
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--page-background, linear-gradient(252.83deg, #5039A8 2.36%, #6AA2DB 99.69%));
+      inset: 0;
+      background: var(--background, linear-gradient(252.83deg, #5039A8 2.36%, #6AA2DB 99.69%));
       opacity: 0.3;
     }
 
@@ -271,11 +268,8 @@ export class PWASimulator extends LitElement {
   }
 
   firstUpdated() {
-    // Show the URL input
-    if (!this.siteUrl) {
-      this.hideEditor = true;
-    } else {
-      // Use the default template
+    // We have a URL, but no manifest
+    if (this.siteUrl && !this.manifest) {
       this.manifest = MANIFEST_TEMPLATE;
     }
 
@@ -335,19 +329,24 @@ export class PWASimulator extends LitElement {
     this.siteUrl = (e.target as HTMLInputElement).value;
   }
 
-  private handleSearchManifest = async (e: Event) => {
+  private handleSearchManifest = (e: Event) => {
     e.preventDefault();
     
     // From the input site URL, find the manifest
-    const data = await fetch(
+    fetch(
       `https://pwabuilder-manifest-finder.azurewebsites.net/api/FindManifest?url=${this.siteUrl}
-    `).then(res => res.json());
-
-    if (data.error || data.manifestContainsInvalidJson) {
+    `)
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        this.errorMessage = data.error;
+      } else {
+        this.manifest = data.manifestContents;
+      }
+    })
+    .catch(() => {
       this.errorMessage = "We couldn't fetch your manifest...";
-    } else {
-      this.manifest = data.manifestContents;
-    }
+    });
   }
 
   // For adding a smooth transition between explanations.
@@ -419,8 +418,9 @@ export class PWASimulator extends LitElement {
   render() {
     if (this.manifest) {
       return html`
-        <div class="background">
+        <div part="background" class="background">
           <div 
+          part="content"
           class="content"
           style=${styleMap({
             transform: this.hideEditor ? 'scale(1.3)' : 'none',
@@ -496,14 +496,15 @@ export class PWASimulator extends LitElement {
       `;
     } else {
       return html`
-        <div class="background">
-          <form class="site-input" @submit=${this.handleSearchManifest}>
-            <h1>Enter the URL to your PWA</h1>
+        <div part="background" class="background">
+          <form part="input-form" class="site-input" @submit=${this.handleSearchManifest}>
+            <h1 part="input-title">Enter the URL to your PWA</h1>
             <input 
+            part="input-field"
             type="text" 
             value=${this.siteUrl} 
             @change=${this.handleSiteInputChange} />
-            <button type="submit">Start</button>
+            <button part="input-button" type="submit">Start</button>
             <p class="invalid-message">
               ${this.errorMessage}
             </p>
