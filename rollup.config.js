@@ -29,7 +29,8 @@ export default {
     copy({
       targets: [
         { src: 'build/*.d.ts', dest: 'dist/' },
-        { src: 'build/*.d.ts.map', dest: 'dist/' }
+        { src: 'build/*.d.ts.map', dest: 'dist/' },
+        { src: 'build/index.html', dest: 'dist/' }
       ]
     })
   ]

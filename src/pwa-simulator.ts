@@ -9,6 +9,7 @@ import './jump-list.js';
 import './store-window.js';
 import './explanation-text.js';
 import MANIFEST_TEMPLATE from './manifest-template.js';
+import { cleanUrl } from './utils/url';
 import { 
   Manifest, 
   Explanations,
@@ -329,24 +330,28 @@ export class PWASimulator extends LitElement {
     this.siteUrl = (e.target as HTMLInputElement).value;
   }
 
-  private handleSearchManifest = (e: Event) => {
-    e.preventDefault();
-    
-    // From the input site URL, find the manifest
-    fetch(
-      `https://pwabuilder-manifest-finder.azurewebsites.net/api/FindManifest?url=${this.siteUrl}
-    `)
-    .then(res => res.json())
-    .then(data => {
+  private handleSearchManifest = async (event: Event) => {
+    event.preventDefault();
+
+    try {
+      const cleanedUrl = cleanUrl(this.siteUrl);
+      this.siteUrl = cleanedUrl;
+
+      // From the input site URL, find the manifest
+      const data = await fetch(
+        `https://pwabuilder-manifest-finder.azurewebsites.net/api/FindManifest?url=${cleanedUrl}
+      `)
+      .then(res => res.json());
+
       if (data.error) {
         this.errorMessage = data.error;
       } else {
         this.manifest = data.manifestContents;
       }
-    })
-    .catch(() => {
-      this.errorMessage = "We couldn't fetch your manifest...";
-    });
+    } catch (err: any) {
+      const message = err.message || "We couldn't fetch your manifest...";
+      this.errorMessage = message;
+    }
   }
 
   // For adding a smooth transition between explanations.
