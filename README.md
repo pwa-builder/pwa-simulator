@@ -65,6 +65,7 @@ Part name | Description
 `input-title` | The title of the form for entering the PWA's URL.
 `input-field` | The text field for entering the PWA's URL.
 `input-button` | The button that submits the form for entering the PWA's URL.
+`status-message` | The text that announces changes in the preview manifest.
 
 The following [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/--*) can also be provided:
 Variable name | Description | Default

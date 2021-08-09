@@ -38,6 +38,10 @@ export class StoreWindow extends LitElement {
       cursor: pointer;
     }
 
+    .close:focus-visible {
+      outline: 2px solid #000;
+    }
+
     .app-header {
       background-color: #FFF;
       position: absolute;
@@ -180,9 +184,16 @@ export class StoreWindow extends LitElement {
 
   render() {
     return html`
-      <div class=${classMap({ 'store-container': true, open: this.isWindowOpen })}>
+      <div 
+      aria-hidden=${!this.isWindowOpen}
+      class=${classMap({ 'store-container': true, open: this.isWindowOpen })}>
         <img class="store-img" alt="Microsoft store" src="../assets/images/msft-store.png" />
-        <div class="close" @click=${this.onClose}></div>
+        <div 
+        role="button" 
+        aria-label="Close store window" 
+        class="close" 
+        @click=${this.onClose}>
+        </div>
         <div class="app-header">
           ${this.iconUrl ? html`<img alt="App icon" src=${this.iconUrl} />` : null}
           <p>${this.appName || 'PWA App'}</p>

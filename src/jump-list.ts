@@ -85,7 +85,9 @@ export class JumpList extends LitElement {
 
   render() {
     return html`
-      <div class=${classMap({ container: true, open: this.isListOpen })}>
+      <div 
+      aria-hidden=${!this.isListOpen}
+      class=${classMap({ container: true, open: this.isListOpen })}>
         <img alt="Window's jump list" src="../assets/images/jumplist.png" class="list" />
         <ul class="shortcuts">
           ${this.shortcuts?.map(shortie => 

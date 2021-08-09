@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit';
-import { customElement, state, property } from 'lit/decorators.js';
+import { customElement, state, property, query } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import './app-window.js';
@@ -123,6 +123,12 @@ export class PWASimulator extends LitElement {
       align-items: center;
     }
 
+    .site-input label {
+      font-weight: 600;
+      font-size: 2rem;
+      margin: 10px 0;
+    }
+
     .site-input input {
       border: 3px solid var(--font-color, #292C3A);
       border-radius: 20px;
@@ -154,10 +160,10 @@ export class PWASimulator extends LitElement {
       font-family: var(--font-family, Arial);
     }
 
-    @media(max-width: 1100px) {
-      .desktop-container { 
-        display: none; 
-      }
+    .editor-status {
+      font-weight: 600;
+      margin: 8px 0 0;
+      font-size: 12px;
     }
   `;
 
@@ -243,6 +249,16 @@ export class PWASimulator extends LitElement {
    */
   @state() private errorMessage = '';
 
+  /**
+   * Status of the changes previewed (used for screen readers).
+   */
+  @state() private editorStatus = '';
+
+  /**
+   * The input field to enter the PWA URL.
+   */
+  @query('#pwa-input') pwaInput!: HTMLInputElement;
+
   constructor() {
     super();
 
@@ -260,11 +276,15 @@ export class PWASimulator extends LitElement {
           text = doc.text;
         }
         this.manifest = JSON.parse(text.join(''));
+        this.editorStatus = 'Changes applied';
         this.errorMessage = '';
       } catch (err) {
         // Ignore the syntax error but show error message
         this.errorMessage = 'Invalid JSON!';
+        this.editorStatus = 'Changes could not be applied';
       }
+
+      setTimeout(() => { this.editorStatus = ''; }, 2000);
     });
   }
 
@@ -300,6 +320,8 @@ export class PWASimulator extends LitElement {
             break;
           }
         }
+        // Make sure the site URL is correctly formatted
+        this.siteUrl = cleanUrl(this.siteUrl);
         const absoluteUrl = new URL(iconUrl, this.siteUrl).href;
         this.iconUrl = `https://pwabuilder-safe-url.azurewebsites.net/api/getsafeurl?url=${absoluteUrl}`;
       }
@@ -345,12 +367,15 @@ export class PWASimulator extends LitElement {
 
       if (data.error) {
         this.errorMessage = data.error;
+        this.pwaInput.focus();
       } else {
+        this.errorMessage = '';
         this.manifest = data.manifestContents;
       }
     } catch (err: any) {
       const message = err.message || "We couldn't fetch your manifest...";
       this.errorMessage = message;
+      this.pwaInput.focus();
     }
   }
 
@@ -437,16 +462,28 @@ export class PWASimulator extends LitElement {
               class="desktop" 
               alt="Windows desktop" 
               src="../assets/images/desktop.png" />
-              <div @click=${this.openStore} class="taskbar-icon store-icon"></div>
+              <div 
+              role="button"
+              tabindex="0"
+              aria-label="Open Microsoft Store"
+              @click=${this.openStore} 
+              class="taskbar-icon store-icon">
+              </div>
               ${this.iconUrl ? 
                 html`
                   <div 
+                  role="button"
+                  tabindex="0"
+                  aria-label="Open application window"
                   class="taskbar-icon taskbar-app-icon" 
                   @mousedown=${this.handleTaskbarClick} 
                   @click=${this.handleTaskbarClick}>
                     <img alt="App icon" src=${this.iconUrl} />
                   </div>` : null}
               <div 
+              role="button"
+              tabindex="0"
+              aria-label="Open Windows start menu"
               class="menu-toggler" 
               @click=${this.isMenuOpen ? this.closeStartMenu : this.openStartMenu}>
               </div>
@@ -489,7 +526,12 @@ export class PWASimulator extends LitElement {
                   <code-editor 
                   .startText=${JSON.stringify(this.manifest, null, '  ')}>
                   </code-editor>
-                  <p class="invalid-message">${this.errorMessage}</p>`}
+                  <p 
+                  part="status-message"
+                  class=${`editor-status ${this.errorMessage && 'invalid-message'}`} 
+                  role="status">
+                    ${this.editorStatus}
+                  </p>`}
             </div>
           </div>
           <explanation-text 
@@ -503,14 +545,15 @@ export class PWASimulator extends LitElement {
       return html`
         <div part="background" class="background">
           <form part="input-form" class="site-input" @submit=${this.handleSearchManifest}>
-            <h1 part="input-title">Enter the URL to your PWA</h1>
+            <label for="pwa-input" part="input-title">Enter the URL to your PWA</label>
             <input 
+            id="pwa-input"
             part="input-field"
             type="text" 
             value=${this.siteUrl} 
             @change=${this.handleSiteInputChange} />
             <button part="input-button" type="submit">Start</button>
-            <p class="invalid-message">
+            <p role="alert" class="invalid-message">
               ${this.errorMessage}
             </p>
           </form>

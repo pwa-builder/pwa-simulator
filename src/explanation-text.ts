@@ -40,6 +40,7 @@ export class ExplanationText extends LitElement {
   render() {
     return html`
       <div 
+      aria-live="polite"
       class=${classMap({ 
         container: true, 
         'fading-in': this.isFadingIn,

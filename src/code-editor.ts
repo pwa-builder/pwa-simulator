@@ -76,6 +76,14 @@ export class CodeEditor extends LitElement {
   }
 
   render() {
-    return html`<div id=${this.editorId} class="${this.className}"></div>`;
+    return html`
+      <div 
+      role="textbox"
+      tabindex="0"
+      aria-label="Code editor: Changes will be reflected in the application's preview." 
+      id=${this.editorId} 
+      class="${this.className}">
+      </div>
+    `;
   }
 }
