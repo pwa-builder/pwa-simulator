@@ -22,7 +22,7 @@
   },
   "name": "@pwabuilder/pwa-simulator",
   "description": "Web component that simulates your PWA's experience on any platform",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Maria J. Solano",
   "license": "MIT",
   "type": "module",
