@@ -192,6 +192,7 @@ export class StoreWindow extends LitElement {
         role="button" 
         aria-label="Close store window" 
         class="close" 
+        tabindex="0"
         @click=${this.onClose}>
         </div>
         <div class="app-header">

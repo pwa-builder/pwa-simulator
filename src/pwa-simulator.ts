@@ -109,7 +109,6 @@ export class PWASimulator extends LitElement {
       font-weight: 600;
       margin: 8px 0 0;
       font-size: 14px;
-      height: 18px;
     }
 
     .site-input {
@@ -161,8 +160,13 @@ export class PWASimulator extends LitElement {
 
     .editor-status {
       font-weight: 600;
-      margin: 8px 0 0;
-      font-size: 12px;
+      margin: -41px 0 10px;
+      font-size: 1rem;
+      background-color: #FFF;
+      padding: 5px;
+      border-radius: 5px;
+      background-color: beige;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     }
   `;
 
@@ -283,7 +287,7 @@ export class PWASimulator extends LitElement {
         this.editorStatus = 'Changes could not be applied';
       }
 
-      setTimeout(() => { this.editorStatus = ''; }, 2000);
+      // setTimeout(() => { this.editorStatus = ''; }, 2000);
     });
   }
 
@@ -522,15 +526,18 @@ export class PWASimulator extends LitElement {
             <div>
               ${this.hideEditor ? null :
                 html`
-                  <code-editor 
-                  .startText=${JSON.stringify(this.manifest, null, '  ')}>
-                  </code-editor>
-                  <p 
-                  part="status-message"
-                  class=${`editor-status ${this.errorMessage && 'invalid-message'}`} 
-                  role="status">
-                    ${this.editorStatus}
-                  </p>`}
+                  ${this.editorStatus ? 
+                    html`
+                    <div 
+                    part="status-message"
+                    class=${`editor-status ${this.errorMessage && 'invalid-message'}`} 
+                    role="status">
+                      ${this.editorStatus}
+                    </div>
+                    ` : null}
+                    <code-editor 
+                    .startText=${JSON.stringify(this.manifest, null, '  ')}>
+                    </code-editor>`}
             </div>
           </div>
           <explanation-text 
