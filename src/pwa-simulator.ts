@@ -47,7 +47,6 @@ export class PWASimulator extends LitElement {
     }
 
     .desktop-container {
-      overflow: hidden;
       width: 700px;
       height: 466px;
       position: relative;
