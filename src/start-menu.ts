@@ -126,15 +126,10 @@ export class StartMenu extends LitElement {
       class=${classMap({ 'menu-container': true, open: this.isMenuOpen })}>
         <img aria-hidden=${!this.isMenuOpen} alt="Start menu background" src="../assets/images/start-menu.png" class="menu" />
         <div tabindex="-1" class="hidden"></div>
-        <div class="app-info" @click=${this.handleAppClick}>
+        <div aria-label="Open application window" role="button" tabindex="0" class="app-info" @click=${this.handleAppClick} @keydown=${this.handleAppClick}>
           ${this.iconUrl ? 
             html`
-              <img 
-              aria-label="Open application window"
-              role="button"
-              class="app-icon" 
-              alt="App icon" 
-              src=${this.iconUrl} />` : 
+              <img class="app-icon" alt="App icon" src=${this.iconUrl} />` : 
             null}
           <div class="app-name">${this.appName || 'PWA App'}</div>
         </div>

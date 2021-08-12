@@ -245,7 +245,8 @@ export class AppWindow extends LitElement {
           role="button" 
           aria-label="Close application window" 
           class="browser-close" 
-          @click=${this.onClose}>
+          @click=${this.onClose}
+          @keydown=${this.onClose}>
           </div>
           ${appSplash}
         `;
@@ -259,7 +260,8 @@ export class AppWindow extends LitElement {
           role="button" 
           aria-label="Close application window" 
           class="browser-close" 
-          @click=${this.onClose}>
+          @click=${this.onClose}
+          @keydown=${this.onClose}>
           </div>
           ${appSplash}
         `;
@@ -276,7 +278,7 @@ export class AppWindow extends LitElement {
             <div class="nav-actions">
               <div class="collapse" style=${styleMap({ backgroundColor: this.contrastingThemeColor })}></div>
               <div class="enlarge" style=${styleMap({ borderColor: this.contrastingThemeColor })}></div>
-              <svg role="button" aria-label="Close application window" tabindex="0" @click=${this.onClose} class="close" width="6px" height="6px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+              <svg role="button" aria-label="Close application window" tabindex="0" @click=${this.onClose} @keydown=${this.onClose} class="close" width="6px" height="6px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
                 <g><path style="fill:${this.contrastingThemeColor}" d="M990,61.2L933.3,5.1L500,443.3L66.7,5.1L10,61.2L443.9,500L10,938.8l56.7,56.1L500,556.7l433.3,438.2l56.7-56.1L556.1,500L990,61.2z"/></g>
               </svg>
             </div>
@@ -292,7 +294,7 @@ export class AppWindow extends LitElement {
             <div class="nav-actions">
               <div class="collapse" style=${styleMap({ backgroundColor: this.contrastingThemeColor })}></div>
               <div class="enlarge" style=${styleMap({ borderColor: this.contrastingThemeColor })}></div>
-              <svg role="button" aria-label="Close application window" tabindex="0" @click=${this.onClose} class="close" width="4px" height="4px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
+              <svg role="button" aria-label="Close application window" tabindex="0" @click=${this.onClose} @keydown=${this.onClose} class="close" width="4px" height="4px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1000 1000" enable-background="new 0 0 1000 1000" xml:space="preserve">
                 <g><path style="fill:${this.contrastingThemeColor}" d="M990,61.2L933.3,5.1L500,443.3L66.7,5.1L10,61.2L443.9,500L10,938.8l56.7,56.1L500,556.7l433.3,438.2l56.7-56.1L556.1,500L990,61.2z"/></g>
               </svg>
             </div>

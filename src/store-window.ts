@@ -193,7 +193,8 @@ export class StoreWindow extends LitElement {
         aria-label="Close store window" 
         class="close" 
         tabindex="0"
-        @click=${this.onClose}>
+        @click=${this.onClose}
+        @keydown=${this.onClose}>
         </div>
         <div class="app-header">
           ${this.iconUrl ? html`<img alt="App icon" src=${this.iconUrl} />` : null}

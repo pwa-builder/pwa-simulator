@@ -358,6 +358,13 @@ export class PWASimulator extends LitElement {
   private handleSearchManifest = async (event: Event) => {
     event.preventDefault();
 
+    // Verify that the URL isn't empty
+    if (this.pwaInput.value.trim().length === 0) {
+      this.errorMessage = 'Please enter a URL to continue.';
+      this.pwaInput.focus();
+      return;
+    }
+
     try {
       const cleanedUrl = cleanUrl(this.siteUrl);
       this.siteUrl = cleanedUrl;
@@ -400,16 +407,32 @@ export class PWASimulator extends LitElement {
     this.handleNewExplanation(this.explanations.appWindow);
     this.isAppOpen = true; 
     this.closeJumplist();
-    this.closeStartMenu();
+    this.isMenuOpen = false;
   }
-  private closeAppWindow = () => { this.isAppOpen = false; }
+  private closeAppWindow = (event: Event) => { 
+    if (event instanceof KeyboardEvent && event.key !== ' ' && event.key !== 'Enter') {
+      return;
+    }
 
-  private openStartMenu = () => { 
+    this.isAppOpen = false; 
+  }
+
+  private openStartMenu = (event: Event) => { 
+    if (event instanceof KeyboardEvent && event.key !== ' ' && event.key !== 'Enter') {
+      return;
+    }
+
     this.handleNewExplanation(this.explanations.startMenu);
     this.isMenuOpen = true;
     this.closeJumplist();
   }
-  private closeStartMenu = () => { this.isMenuOpen = false; }
+  private closeStartMenu = (event: Event) => { 
+    if (event instanceof KeyboardEvent && event.key !== ' ' && event.key !== 'Enter') {
+      return;
+    }
+
+    this.isMenuOpen = false; 
+  }
 
   private openJumplist = () => { 
     this.handleNewExplanation(this.explanations.jumpList);
@@ -417,7 +440,11 @@ export class PWASimulator extends LitElement {
   }
   private closeJumplist = () => { this.isJumplistOpen = false; }
 
-  private openStore = () => {
+  private openStore = (event: Event) => {
+    if (event instanceof KeyboardEvent && event.key !== ' ' && event.key !== 'Enter') {
+      return;
+    }
+
     this.handleNewExplanation(this.explanations.store);
     this.isStoreOpen = true;
     this.closeJumplist();
@@ -428,11 +455,15 @@ export class PWASimulator extends LitElement {
    * Depending on the click, open the jump list or application when clicking
    * taskbar icon.
    */
-  private handleTaskbarClick = (event: MouseEvent) => {
+  private handleTaskbarClick = (event: Event) => {
+    if (event instanceof KeyboardEvent && event.key !== ' ' && event.key !== 'Enter') {
+      return;
+    }
+
     event.preventDefault();
     event.stopPropagation();
 
-    const isRightClick = event.buttons === 2;
+    const isRightClick = (event as MouseEvent).buttons === 2;
     if (isRightClick) {
       this.openJumplist();
     } else {
@@ -445,7 +476,7 @@ export class PWASimulator extends LitElement {
    */
   private handleBackdropClick = () => {
     this.closeJumplist();
-    this.closeStartMenu();
+    this.isMenuOpen = false;
   }
 
   render() {
@@ -470,6 +501,7 @@ export class PWASimulator extends LitElement {
               tabindex="0"
               aria-label="Open Microsoft Store"
               @click=${this.openStore} 
+              @keydown=${this.openStore}
               class="taskbar-icon store-icon">
               </div>
               ${this.iconUrl ? 
@@ -480,7 +512,8 @@ export class PWASimulator extends LitElement {
                   aria-label="Open application window"
                   class="taskbar-icon taskbar-app-icon" 
                   @mousedown=${this.handleTaskbarClick} 
-                  @click=${this.handleTaskbarClick}>
+                  @click=${this.handleTaskbarClick}
+                  @keydown=${this.handleTaskbarClick}>
                     <img alt="App icon" src=${this.iconUrl} />
                   </div>` : null}
               <div 
@@ -488,7 +521,8 @@ export class PWASimulator extends LitElement {
               tabindex="0"
               aria-label="Open Windows start menu"
               class="menu-toggler" 
-              @click=${this.isMenuOpen ? this.closeStartMenu : this.openStartMenu}>
+              @click=${this.isMenuOpen ? this.closeStartMenu : this.openStartMenu}
+              @keydown=${this.isMenuOpen ? this.closeStartMenu : this.openStartMenu}>
               </div>
               <start-menu
               .isMenuOpen=${this.isMenuOpen}
