@@ -8,15 +8,15 @@ import type { Shortcut, ImageResource } from './models';
 export class JumpList extends LitElement {
   static styles = css`
     :host {
-      --windows-background: #D9E8F0;
+      --windows-background: #D5DDF0;
     }
 
     .container {
       position: absolute;
-      width: 120px;
+      width: 129px;
       bottom: 22px;
-      right: 184px;
-      height: 137px;
+      right: 213px;
+      height: 100px;
       opacity: 0;
       transform: translateY(159px);
       transition: all 200ms ease-in-out;
@@ -36,8 +36,8 @@ export class JumpList extends LitElement {
     .shortcuts {
       position: absolute;
       background-color: var(--windows-background);
-      width: 118px;
-      height: 102px;
+      width: 128px;
+      height: 66px;
       bottom: 16px;
       margin: 0;
       padding: 0;

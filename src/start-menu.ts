@@ -6,14 +6,14 @@ import { classMap } from 'lit/directives/class-map.js';
 export class StartMenu extends LitElement {
   static styles = css`
     :host {
-      --windows-background: #F1F0F6;
+      --windows-background: #E1E6F7;
     }
 
     .menu-container {
       position: absolute;
-      width: 250px;
+      width: 233px;
       bottom: 22px;
-      left: calc(50% - 125px);
+      left: calc(50% - 105px);
       height: 263px;
       opacity: 0;
       transform: translateY(285px);
@@ -30,15 +30,6 @@ export class StartMenu extends LitElement {
       height: 100%;
       border-radius: 4px;
     }
-    
-    .hidden {
-      background-color: var(--windows-background);
-      position: absolute;
-      width: 195px;
-      height: 42px;
-      left: 24px;
-      bottom: 43px;
-    }
 
     .app-info {
       position: absolute;
@@ -46,8 +37,8 @@ export class StartMenu extends LitElement {
       flex-direction: column;
       align-items: center;
       background-color: var(--windows-background);
-      right: 88px;
-      top: 34px;
+      right: 84px;
+      top: 52px;
       max-width: 38px;
       min-width: 31px;
       overflow-x: hidden;
@@ -68,24 +59,6 @@ export class StartMenu extends LitElement {
       width: 15px;
       height: 15px;
       cursor: pointer;
-    }
-
-    .avatar {
-      position: absolute;
-      background-color: #EDEEFB;
-      display: flex;
-      align-items: center;
-      font-size: 6.5px;
-      bottom: 5px;
-      left: 23px;
-      width: 59px;
-    }
-
-    .avatar img {
-      border-radius: 50%;
-      width: 15px;
-      height: 15px;
-      margin-right: 5px;
     }
   `;
 
@@ -125,17 +98,12 @@ export class StartMenu extends LitElement {
       aria-hidden=${!this.isMenuOpen}
       class=${classMap({ 'menu-container': true, open: this.isMenuOpen })}>
         <img aria-hidden=${!this.isMenuOpen} alt="Start menu background" src="../assets/images/start-menu.png" class="menu" />
-        <div tabindex="-1" class="hidden"></div>
         <div aria-label="Open application window" role="button" tabindex="0" class="app-info" @click=${this.handleAppClick} @keydown=${this.handleAppClick}>
           ${this.iconUrl ? 
             html`
               <img class="app-icon" alt="App icon" src=${this.iconUrl} />` : 
             null}
           <div class="app-name">${this.appName || 'PWA App'}</div>
-        </div>
-        <div class="avatar">
-          <img alt="User" src="../assets/images/avatar.jpg" />
-          Jane Doe
         </div>
       </div>
     `;

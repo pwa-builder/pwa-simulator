@@ -63,8 +63,8 @@ export class PWASimulator extends LitElement {
     .taskbar-icon {
       position: absolute;
       bottom: 1.5px;
-      width: 15.5px;
-      height: 15.5px;
+      width: 12px;
+      height: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -74,11 +74,11 @@ export class PWASimulator extends LitElement {
     }
 
     .taskbar-icon.taskbar-app-icon {
-      right: 240px;
+      right: 273px;
     }
 
     .store-icon {
-      right: 295px;
+      right: 287.5px;
     }
 
     .taskbar-app-icon:hover {
@@ -86,17 +86,16 @@ export class PWASimulator extends LitElement {
     }
 
     .taskbar-icon img {
-      width: 80%;
+      width: 88%;
     }
 
     .menu-toggler {
       cursor: pointer;
       position: absolute;
-      left: 240px;
-      bottom: 2px;
-      right: 240.5px;
-      width: 15px;
-      height: 15px;
+      left: 287px;
+      bottom: 1.5px;
+      width: 12px;
+      height: 12px;
       border-radius: 2px;
     }
 
@@ -287,7 +286,7 @@ export class PWASimulator extends LitElement {
         this.editorStatus = 'Changes could not be applied';
       }
 
-      // setTimeout(() => { this.editorStatus = ''; }, 2000);
+      setTimeout(() => { this.editorStatus = ''; }, 4000);
     });
   }
 

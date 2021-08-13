@@ -9,9 +9,9 @@ export class StoreWindow extends LitElement {
   static styles = css`
     .store-container {
       position: absolute;
-      width: 60%;
-      height: 319px;
-      left: 20%;
+      width: 70%;
+      height: 330px;
+      left: 15%;
       top: 50px;
       transform: scale(0);
       opacity: 0;
@@ -48,10 +48,10 @@ export class StoreWindow extends LitElement {
       display: flex;
       flex-direction: column;
       align-items: center;
-      top: 30px;
-      left: 48px;
-      height: 107px;
-      width: 90px;
+      top: 19px;
+      left: 59px;
+      height: 100px;
+      width: 85px;
       text-align: center;
       justify-content: flex-end;
       font-size: 12px;
@@ -73,8 +73,8 @@ export class StoreWindow extends LitElement {
       position: absolute;
       bottom: 62px;
       font-size: 7px;
-      left: 40px;
-      width: 102px;
+      left: 49px;
+      width: 100px;
       min-height: 26px;
       max-height: 50px;
       text-align: center;
@@ -84,10 +84,10 @@ export class StoreWindow extends LitElement {
     .description-block {
       background-color: #FFF;
       position: absolute;
-      bottom: 73px;
-      right: 15px;
-      width: 236px;
-      height: 62px;
+      bottom: 90px;
+      right: 12px;
+      width: 291px;
+      height: 66px;
       font-size: 7px;
       overflow: hidden;
     }
@@ -96,11 +96,11 @@ export class StoreWindow extends LitElement {
       position: absolute;
       background-color: #FFF;
       overflow: hidden;
-      height: 109px;
-      top: 40px;
-      right: 10px;
+      height: 102px;
+      top: 39px;
+      right: 3px;
       display: flex;
-      width: 240px;
+      width: 299px;
     }
 
     .screenshots img {
@@ -114,8 +114,8 @@ export class StoreWindow extends LitElement {
       position: absolute;
       display: flex;
       bottom: 5px;
-      left: 30px;
-      width: 120px;
+      left: 33px;
+      width: 124px;
       height: 50px;
     }
 
@@ -129,6 +129,15 @@ export class StoreWindow extends LitElement {
       text-align: center;
       border: solid 0.5px #CECECE;
       overflow: hidden;
+    }
+
+    .hidden-rating {
+      right: 155px;
+      background-color: #FFF;
+      height: 20px;
+      position: absolute;
+      bottom: 0px;
+      width: 147px;
     }
   `;
 
@@ -201,6 +210,7 @@ export class StoreWindow extends LitElement {
           <p>${this.appName || 'PWA App'}</p>
         </div>
         <p class="description-preview">${this.description}</p>
+        <div class="hidden-rating"></div>
         <div class="categories">
           ${this.categories?.map(categ => html`<div>${categ}</div>`)}
         </div>
