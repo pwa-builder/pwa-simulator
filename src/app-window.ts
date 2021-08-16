@@ -254,7 +254,6 @@ export class AppWindow extends LitElement {
         return html`
           <img class="browser-img" alt="Window's browser" src="../assets/images/browser-window.png" />
           <span class="app-url">${this.siteUrl}</span>
-          <img class="avatar" alt="User" src="../assets/images/avatar.jpg" />
           <div
           tabindex="0" 
           role="button" 

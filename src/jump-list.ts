@@ -23,6 +23,7 @@ export class JumpList extends LitElement {
     }
 
     .container.open {
+      z-index: 1;
       opacity: 1;
       transform: translateY(0);
     }

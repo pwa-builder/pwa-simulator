@@ -18,6 +18,7 @@ export class StartMenu extends LitElement {
       opacity: 0;
       transform: translateY(285px);
       transition: all 200ms ease-in-out;
+      z-index: 1;
     }
 
     .menu-container.open {

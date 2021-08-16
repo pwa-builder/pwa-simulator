@@ -446,6 +446,7 @@ export class PWASimulator extends LitElement {
 
     this.handleNewExplanation(this.explanations.store);
     this.isStoreOpen = true;
+    this.isMenuOpen = false;
     this.closeJumplist();
   }
   private closeStore = () => { this.isStoreOpen = false; }
